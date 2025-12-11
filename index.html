@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Sprachtext Synagoge Wolfenbüttel</title>
+  <style>
+    :root{
+      --bg: #0e1117; --card: #12161f; --text: #e6edf3; --muted:#9aa7b2;
+      --chip:#202634; --accent:#1f6f3d; --accent-press:#185833; --shadow:rgba(0,0,0,.35);
+    }
+    html,body{height:100%}
+    body{
+      margin:0;
+      font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background:var(--bg);
+    }
+    .container{max-width:920px; margin:0 auto; padding:16px}
+    header{
+      position:sticky; top:0; z-index:5;
+      backdrop-filter:saturate(140%) blur(8px);
+      background: color-mix(in srgb, var(--bg) 80%, transparent);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .hero{
+      position:relative;
+      background:linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--card) 90%, transparent) 0%,
+        transparent 100%
+      );
+      border-radius:20px;
+      padding:22px 20px 18px;
+      box-shadow:0 10px 30px var(--shadow) inset;
+    }
+    .lang{
+      position:absolute;
+      right:12px;
+      top:12px;
+    }
+    .lang button{
+      appearance:none;
+      -webkit-tap-highlight-color:transparent;
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,.08);
+      background:var(--chip);
+      color:#fff;
+      padding:10px 14px;
+      border-radius:999px;
+      font-weight:800;
+      letter-spacing:.5px;
+      box-shadow:0 8px 18px rgba(0,0,0,.25);
+      transition:transform .08s ease, box-shadow .2s ease;
+    }
+    .lang button:active{
+      transform:translateY(1px) scale(.98);
+      box-shadow:0 4px 10px rgba(0,0,0,.35);
+    }
+    h1{
+      margin:0;
+      font-weight:900;
+      letter-spacing:.2px;
+      font-size:clamp(22px,4.2vw,34px);
+    }
+    .subtitle{
+      margin-top:6px;
+      color:var(--muted);
+      font-weight:700;
+      font-size:clamp(14px,2.3vw,18px);
+    }
+
+    /* Player */
+    .player{
+      margin:16px 0 6px;
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:16px;
+      padding:14px;
+      box-shadow:0 8px 24px rgba(0,0,0,.25);
+    }
+    .row{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .play{
+      appearance:none;
+      border:none;
+      border-radius:999px;
+      width:44px; height:44px;
+      background:var(--accent);
+      color:#fff;
+      font-weight:900;
+      font-size:16px;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      box-shadow:0 10px 26px rgba(31,111,61,.35);
+    }
+    .play:active{background:var(--accent-press)}
+    .times{
+      min-width:78px;
+      text-align:right;
+      font-variant-numeric:tabular-nums;
+      color:var(--muted);
+    }
+    .range{flex:1}
+    input[type=range]{width:100%}
+
+    main .text{
+      margin-top:8px;
+      font-size:18px;
+    }
+    main .text p{
+      margin:0 0 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="hero">
+        <div class="lang">
+          <button id="langBtn" aria-label="Sprache umschalten">DE</button>
+        </div>
+        <h1 id="title">Sprachtext Synagoge Wolfenbüttel</h1>
+        <div class="subtitle" id="subtitle">Wolfenbüttel um 1900.</div>
+
+        <div class="player" aria-label="Audio-Player">
+          <div class="row">
+            <button class="play" id="playBtn" aria-label="Abspielen/Pause">▶</button>
+            <div class="range">
+              <input id="seek" type="range" min="0" max="100" value="0" step="1" aria-label="Positionsregler">
+            </div>
+            <div class="times">
+              <span id="cur">0:00</span> / <span id="dur">0:00</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <article class="text" id="body"></article>
+  </main>
+
+  <!-- Скрытый <audio> -->
+  <audio id="audio" preload="none"></audio>
+  <script>
+  /* === БАЗОВЫЙ ПУТЬ К АУДИО (ЖЁСТКО ПРИВЯЗАН К ТВОЕМУ РЕПО) === */
+  const AUDIO_BASE =
+    'https://ausstellungmw.github.io/Frauen-im-geteilten-Deutschland/assets/audio/';
+
+  // Формируем полный URL: /assets/audio/DE/ZUNAGOGA.DE.mp3 или /EN/ZUNAGOGA.EN.mp3
+  function getAudioUrl(currentLang){
+    const folder = (currentLang === 'de') ? 'DE' : 'EN';
+    const file   = (currentLang === 'de') ? 'ZUNAGOGA.DE.mp3' : 'ZUNAGOGA.EN.mp3';
+    return `${AUDIO_BASE}${folder}/${file}`;
+  }
+
+  /* === ТЕКСТЫ И НАСТРОЙКИ ДЛЯ ЭТОГО ГИДА === */
+  const i18n = {
+    de: {
+      title: 'Sprachtext Synagoge Wolfenbüttel',
+      subtitle: 'Wolfenbüttel um 1900.',
+      body: `Nahe der berühmten Herzog August Bibliothek stand einst in der Lessingstraße die Synagoge der jüdischen Gemeinde. Im November 1938 zerstörten die Nationalsozialisten den eindrucksvollen Bau. Mit Hilfe von Plänen und Fotografien gelang eine virtuelle Rekonstruktion des Gebäudes. Der bekannte Braunschweiger Architekt Konstantin Ude hatte es entworfen. Markant die Doppelturmfassade mit orientalischen und romanischen Stilelementen. Hoch oben thronen die Gesetzestafeln mit den 10 Geboten. Ein typisches Merkmal jüdischer Gotteshäuser. Filigrane Architekturelemente verzahnen Türme und Giebel und verleihen dem Gebäude eine einzigartige Ausstrahlung.
+
+Am 21. Juni 1893 wurde die Neue Synagoge feierlich eingeweiht.
+
+Gehen wir von der reich mit Backsteinornamenten verzierten Eingangsfassade zur Südseite. Die Vorlage für die Farbe der Backsteine lieferte die fast zeitgleich errichtete jüdische Freischule, bekannt als Samsonschule.
+Der Neubau der Synagoge war notwendig geworden, da der Vorgängerbau in der Harzstraße zu klein geworden war. Der Blick geht weiter von der Südwand zum östlichen Abschluss des Gebäudes. Hier zeichnet sich deutlich eine Apsis ab. Im Inneren befand sich dort der Toraaschrein, der die wertvollen Toraarollen beherbergte.
+
+Nur durch Fotografien konnte die Gestalt der Apsis ermittelt werden, die eindeutig rund ausgebildet ist. Die Entwurfspläne des Architekten zeigen dagegen eine polygonale Form. Auch bei den Fenstern sieht man Unterschiede zwischen Entwurf und Ausführung. Der Entwurf zeigt im Erdgeschoss rundbogige Fenster, gebaut wurde eine Dreiecksform. So musste sich die Rekonstruktion eher an den Fotografien orientieren. Die Nordseite, die wir hier sehen, wurde oft fotografiert, da das unbebaute Nachbargrundstück den Blick auf die Längsseite freigab.
+
+Die Synagoge Wolfenbüttel war eine sogenannte Reformsynagoge. Für den Gottesdienst bedeutete dies eine gekürzte Liturgie zum Teil in deutscher Sprache, eine regelmäßige Predigt sowie die Einführung des Orgelspiels. Eine Orgel befand sich in der Wolfenbütteler Synagoge direkt hinter dem großen Fenster in der Eingangsfassade.
+Männer und Frauen betraten wohl das Gebäude durch dieses Portal. Während die Frauen dann über eine Treppe auf eine Empore gelangten, war den Männern das Erdgeschoss vorbehalten.
+
+Vor uns der prächtige Toraschrein. Hinter dem roten Vorhang befanden sich wertvolle Schriftrollen – die sogenannten Torarollen. Alle enthalten den gleichen Text – die Tora – die fünf Bücher Mose. Bis heute ist sie handgeschrieben auf Pergament und auf zwei Holzstäbe aufgerollt.
+Bekrönt wird der Toraschrein durch eine halbrunde Kuppel.
+Vor dem Toraschrein stand die Bima. Von dort wurde aus der Tora vorgelesen.
+
+Der hier gezeigte Blick ließ sich aus der einzigen bildlichen Überlieferung des prachtvollen Innenraums gewinnen. Somit stellte diese Fotografie und Entwurfspläne, die aber nicht die endgültige Ausführung zeigen, die Grundlage für die Rekonstruktion dar. Die Farbgebung ist hypothetisch und wurde anderen Synagogen nachempfunden.
+
+Schauen wir nun nach oben zu der Empore. Dort saßen die Frauen. 84 Sitzplätze soll es hier für sie gegeben haben.
+
+Unser Blick schwenkt weiter nach Westen. Im Vergleich zu der eben gesehenen Fotografie ist die Gestaltung des Westbereichs nur fragmentarisch überliefert. Zum einen halfen die Pläne, zum anderen ergaben sich die entscheidenden Hinweise für die Rekonstruktion ausgerechnet durch ein Bild der zerstörten Synagoge. Schauen wir uns dieses an. Wir sehen im Westen die Ausbildung der Empore mit einer bemalten Brüstung. Daraus leitet sich die Rekonstruktion für die Westempore ab.
+
+Hier der Blick von der Westempore. Sehen wir uns nun den Innenraum von der seitlichen Empore aus an. Gut ist die Längsausrichtung des Gebäudes wahrzunehmen. In der Regel sind der Toraschrein und die gesamte Synagoge in ihrer Längsachse nach Jerusalem ausgerichtet. In Deutschland liegt so der Toraschrein fast immer im Osten des Gebäudes. Der Eingang dagegen liegt meistens gegenüber – auf der Westseite. So auch in Wolfenbüttel.
+
+Schauen wir uns nun den Bereich um den Toraschrein von der Frauenempore aus an. Während in orthodoxen Synagogen die Bima in der Mitte des Raums steht, befindet sie sich in Reformsynagogen wie hier vor dem Schrein. Zwei Stufen führen auf einen erhöhten Bereich, der in der Toraanische endet.
+Die Toraanische von unten. Über der Bima hängt das Ewige Licht.
+
+Der erhöhte Blick auf die Westempore gibt die Sicht auf die imposante Orgel frei. Von ihr gab es eine Zeichnung, die als Vorlage für den Nachbau im Computer diente. Neben der Orgel ist ein Chor, in dem auch Frauen singen, Kennzeichen von Reformsynagogen.
+
+Mit dieser zentralen Perspektive begeben wir uns – vorbei am Ewigen Licht – wieder in das Erdgeschoss. Im Vordergrund die Bima – hinten der Eingang im Westen.
+Betrachten wir jetzt noch einmal den Bereich, wo die Männer saßen, genauer. 200 Sitzplätze standen hier zur Verfügung. Der Blick geht abschließend zum Eingang.
+
+45 Jahre betraten jüdische Männer hier die Synagoge, dann zerstören Nationalsozialisten in der Nacht vom 9. auf den 10. November 1938 für immer das Gotteshaus. Die Einrichtung wird zerschlagen und das Gebäude mit Benzin angezündet. Es brannte bis auf die Umfassungsmauern aus.
+
+1933 zählte die jüdische Gemeinde 112 Mitglieder, 1939 nur noch rund 50. Sie wurden von den Nationalsozialisten in die Vernichtungslager deportiert und fast alle ermordet. Mit den letzten Deportationen am 16. März 1943 erlischt das jüdische Leben in Wolfenbüttel. Eine neue Gemeinde entsteht nicht mehr.
+
+Auf dem Grundstück der Synagoge steht heute ein Wohnhaus. Eine Gedenktafel erinnert an die ehemalige Synagoge. Auch an anderer Stelle wird mit der Eröffnung des Gedenk- und Begegnungsorts Samson Schule an jüdisches Leben in Wolfenbüttel erinnert. Nach umfassendem Umbau bietet das ehemalige jüdische Schulhaus Platz für eine Dauerausstellung zum jüdischen Leben in der Stadt sowie für Veranstaltungen und rund 150 Apartments für Studierende und Auszubildende. Das Gebäude knüpft so an eine jüdische Tradition im Sinne der Aufklärung, Bildung und Verständigung an.
+
+Schauen wir zum Schluss noch einmal in die Lessingstraße. So würde es aussehen, wenn die Synagoge noch stehen würde. An sie erinnert nun das Bürgermuseum mit der virtuellen Rekonstruktion. Es möchte mit den Medien des 21. Jahrhunderts gerade junge Menschen neugierig machen für die Beschäftigung mit der jüdischen Vergangenheit der Stadt.`,
+      code: 'EN',
+      ariaPlay: 'Abspielen',
+      ariaPause: 'Pause'
+    },
+    en: {
+      title: 'Sprachtext Synagoge Wolfenbüttel',
+      subtitle: 'Wolfenbüttel around 1900.',
+      body: `English version is in preparation.`,
+      code: 'DE',
+      ariaPlay: 'Play',
+      ariaPause: 'Pause'
+    }
+  };
+
+  // Ключ для локального сохранения языка
+  const langKey = 'synagoge_lang';
+  let lang = localStorage.getItem(langKey) || 'de';
+
+  const titleEl = document.getElementById('title');
+  const subtitleEl = document.getElementById('subtitle');
+  const bodyEl = document.getElementById('body');
+  const langBtn = document.getElementById('langBtn');
+
+  function setBodyText(text){
+    bodyEl.innerHTML = '';
+    text.split(/\n\s*\n|\n(?=\S)/).forEach(p=>{
+      const el = document.createElement('p');
+      el.textContent = p.trim();
+      bodyEl.appendChild(el);
+    });
+  }
+
+  // Аудио-логика
+  const audio = document.getElementById('audio');
+  const playBtn = document.getElementById('playBtn');
+  const seek = document.getElementById('seek');
+  const cur = document.getElementById('cur');
+  const dur = document.getElementById('dur');
+
+  function toTime(s){
+    s = Math.max(0, s|0);
+    const m = (s/60)|0;
+    const r = (s%60)|0;
+    return `${m}:${r.toString().padStart(2,'0')}`;
+  }
+
+  function loadAudio(){
+    audio.src = getAudioUrl(lang);       // DE → .../DE/ZUNAGOGA.DE.mp3, EN → .../EN/ZUNAGOGA.EN.mp3
+    audio.load();
+    seek.value = 0;
+    seek.max = 100;
+    cur.textContent = '0:00';
+    dur.textContent = '0:00';
+    playBtn.textContent = '▶';
+    playBtn.setAttribute('aria-label', i18n[lang].ariaPlay);
+  }
+
+  playBtn.addEventListener('click', ()=>{
+    if(audio.paused){
+      audio.play().catch(()=>{});
+    } else {
+      audio.pause();
+    }
+  });
+
+  audio.addEventListener('play', ()=>{
+    playBtn.textContent = '❚❚';
+    playBtn.setAttribute('aria-label', i18n[lang].ariaPause);
+  });
+
+  audio.addEventListener('pause', ()=>{
+    playBtn.textContent = '▶';
+    playBtn.setAttribute('aria-label', i18n[lang].ariaPlay);
+  });
+
+  audio.addEventListener('loadedmetadata', ()=>{
+    dur.textContent = toTime(audio.duration || 0);
+  });
+
+  audio.addEventListener('timeupdate', ()=>{
+    if(audio.duration){
+      seek.max = Math.floor(audio.duration);
+      seek.value = Math.floor(audio.currentTime);
+      cur.textContent = toTime(audio.currentTime);
+    }
+  });
+
+  seek.addEventListener('input', ()=>{
+    if(audio.duration){
+      audio.currentTime = +seek.value;
+    }
+  });
+
+  function applyLang(){
+    const t = i18n[lang];
+    document.documentElement.lang = (lang === 'de' ? 'de' : 'en');
+    titleEl.textContent = t.title;
+    subtitleEl.textContent = t.subtitle;
+    setBodyText(t.body);
+    langBtn.textContent = t.code;
+    loadAudio();
+  }
+
+  langBtn.addEventListener('click', ()=>{
+    lang = (lang === 'de') ? 'en' : 'de';
+    localStorage.setItem(langKey, lang);
+    applyLang();
+  });
+
+  // Первый запуск
+  applyLang();
+</script>
