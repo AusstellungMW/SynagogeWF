@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Sprachtext Synagoge Wolfenbüttel</title>
+  <title>Synagogue Wolfenbüttel — Audio Guide</title>
   <style>
     :root{
       --bg: #0e1117; --card: #12161f; --text: #e6edf3; --muted:#9aa7b2;
@@ -16,9 +16,15 @@
       color:var(--text);
       background:var(--bg);
     }
-    .container{max-width:920px; margin:0 auto; padding:16px}
+    .container{
+      max-width:920px;
+      margin:0 auto;
+      padding:16px;
+    }
     header{
-      position:sticky; top:0; z-index:5;
+      position:sticky;
+      top:0;
+      z-index:5;
       backdrop-filter:saturate(140%) blur(8px);
       background: color-mix(in srgb, var(--bg) 80%, transparent);
       border-bottom:1px solid rgba(255,255,255,.06);
@@ -33,29 +39,6 @@
       border-radius:20px;
       padding:22px 20px 18px;
       box-shadow:0 10px 30px var(--shadow) inset;
-    }
-    .lang{
-      position:absolute;
-      right:12px;
-      top:12px;
-    }
-    .lang button{
-      appearance:none;
-      -webkit-tap-highlight-color:transparent;
-      cursor:pointer;
-      border:1px solid rgba(255,255,255,.08);
-      background:var(--chip);
-      color:#fff;
-      padding:10px 14px;
-      border-radius:999px;
-      font-weight:800;
-      letter-spacing:.5px;
-      box-shadow:0 8px 18px rgba(0,0,0,.25);
-      transition:transform .08s ease, box-shadow .2s ease;
-    }
-    .lang button:active{
-      transform:translateY(1px) scale(.98);
-      box-shadow:0 4px 10px rgba(0,0,0,.35);
     }
     h1{
       margin:0;
@@ -121,17 +104,14 @@
   <header>
     <div class="container">
       <div class="hero">
-        <div class="lang">
-          <button id="langBtn" aria-label="Sprache umschalten">DE</button>
-        </div>
-        <h1 id="title">Sprachtext Synagoge Wolfenbüttel</h1>
-        <div class="subtitle" id="subtitle">Wolfenbüttel um 1900.</div>
+        <h1 id="title">Synagogue Wolfenbüttel — Audio Text</h1>
+        <div class="subtitle" id="subtitle">Wolfenbüttel around 1900</div>
 
-        <div class="player" aria-label="Audio-Player">
+        <div class="player" aria-label="Audio player">
           <div class="row">
-            <button class="play" id="playBtn" aria-label="Abspielen/Pause">▶</button>
+            <button class="play" id="playBtn" aria-label="Play/Pause">▶</button>
             <div class="range">
-              <input id="seek" type="range" min="0" max="100" value="0" step="1" aria-label="Positionsregler">
+              <input id="seek" type="range" min="0" max="100" value="0" step="1" aria-label="Position">
             </div>
             <div class="times">
               <span id="cur">0:00</span> / <span id="dur">0:00</span>
@@ -147,209 +127,141 @@
     <article class="text" id="body"></article>
   </main>
 
-  <!-- Скрытый <audio> -->
+  <!-- Hidden audio element -->
   <audio id="audio" preload="none"></audio>
+
   <script>
-  /* === БАЗОВЫЙ ПУТЬ К АУДИО (ЖЁСТКО ПРИВЯЗАН К ТВОЕМУ РЕПО) === */
-  const AUDIO_BASE =
-    'https://ausstellungmw.github.io/Frauen-im-geteilten-Deutschland/assets/audio/';
+    // *** AUDIO FILE LOCATION ***
+    // The file must be here in your repo:
+    //   assets/audio/EN/ZUNAGOGA.EN.mp3
+    // Full URL:
+    //   https://ausstellungmw.github.io/Frauen-im-geteilten-Deutschland/assets/audio/EN/ZUNAGOGA.EN.mp3
+    const AUDIO_URL =
+      'https://ausstellungmw.github.io/Frauen-im-geteilten-Deutschland/assets/audio/EN/ZUNAGOGA.EN.mp3';
 
-  // Формируем полный URL: /assets/audio/DE/ZUNAGOGA.DE.mp3 или /EN/ZUNAGOGA.EN.mp3
-  function getAudioUrl(currentLang){
-    const folder = (currentLang === 'de') ? 'DE' : 'EN';
-    const file   = (currentLang === 'de') ? 'ZUNAGOGA.DE.mp3' : 'ZUNAGOGA.EN.mp3';
-    return `${AUDIO_BASE}${folder}/${file}`;
-  }
-
-  /* === ТЕКСТЫ И НАСТРОЙКИ ДЛЯ ЭТОГО ГИДА === */
-  const i18n = {
-  de: {
-    title: 'Sprachtext Synagoge Wolfenbüttel',
-    subtitle: 'Wolfenbüttel um 1900.',
-    body: `Nahe der berühmten Herzog August Bibliothek stand einst in der Lessingstraße die Synagoge der jüdischen Gemeinde. Im November 1938 zerstörten die Nationalsozialisten den eindrucksvollen Bau. Mit Hilfe von Plänen und Fotografien gelang eine virtuelle Rekonstruktion des Gebäudes. Der bekannte Braunschweiger Architekt Konstantin Ude hatte es entworfen. Markant die Doppelturmfassade mit orientalischen und romanischen Stilelementen. Hoch oben thronen die Gesetzestafeln mit den 10 Geboten. Ein typisches Merkmal jüdischer Gotteshäuser. Filigrane Architekturelemente verzahnen Türme und Giebel und verleihen dem Gebäude eine einzigartige Ausstrahlung.
-
-Am 21. Juni 1893 wurde die Neue Synagoge feierlich eingeweiht.
-
-Gehen wir von der reich mit Backsteinornamenten verzierten Eingangsfassade zur Südseite. Die Vorlage für die Farbe der Backsteine lieferte die fast zeitgleich errichtete jüdische Freischule, bekannt als Samsonschule.
-Der Neubau der Synagoge war notwendig geworden, da der Vorgängerbau in der Harzstraße zu klein geworden war. Der Blick geht weiter von der Südwand zum östlichen Abschluss des Gebäudes. Hier zeichnet sich deutlich eine Apsis ab. Im Inneren befand sich dort der Toraaschrein, der die wertvollen Toraarollen beherbergte.
-
-Nur durch Fotografien konnte die Gestalt der Apsis ermittelt werden, die eindeutig rund ausgebildet ist. Die Entwurfspläne des Architekten zeigen dagegen eine polygonale Form. Auch bei den Fenstern sieht man Unterschiede zwischen Entwurf und Ausführung. Der Entwurf zeigt im Erdgeschoss rundbogige Fenster, gebaut wurde eine Dreiecksform. So musste sich die Rekonstruktion eher an den Fotografien orientieren. Die Nordseite, die wir hier sehen, wurde oft fotografiert, da das unbebaute Nachbargrundstück den Blick auf die Längsseite freigab.
-
-Die Synagoge Wolfenbüttel war eine sogenannte Reformsynagoge. Für den Gottesdienst bedeutete dies eine gekürzte Liturgie zum Teil in deutscher Sprache, eine regelmäßige Predigt sowie die Einführung des Orgelspiels. Eine Orgel befand sich in der Wolfenbütteler Synagoge direkt hinter dem großen Fenster in der Eingangsfassade.
-Männer und Frauen betraten wohl das Gebäude durch dieses Portal. Während die Frauen dann über eine Treppe auf eine Empore gelangten, war den Männern das Erdgeschoss vorbehalten.
-
-Vor uns der prächtige Toraschrein. Hinter dem roten Vorhang befanden sich wertvolle Schriftrollen – die sogenannten Torarollen. Alle enthalten den gleichen Text – die Tora – die fünf Bücher Mose. Bis heute ist sie handgeschrieben auf Pergament und auf zwei Holzstäbe aufgerollt.
-Bekrönt wird der Toraschrein durch eine halbrunde Kuppel.
-Vor dem Toraschrein stand die Bima. Von dort wurde aus der Tora vorgelesen.
-
-Der hier gezeigte Blick ließ sich aus der einzigen bildlichen Überlieferung des prachtvollen Innenraums gewinnen. Somit stellte diese Fotografie und Entwurfspläne, die aber nicht die endgültige Ausführung zeigen, die Grundlage für die Rekonstruktion dar. Die Farbgebung ist hypothetisch und wurde anderen Synagogen nachempfunden.
-
-Schauen wir nun nach oben zu der Empore. Dort saßen die Frauen. 84 Sitzplätze soll es hier für sie gegeben haben.
-
-Unser Blick schwenkt weiter nach Westen. Im Vergleich zu der eben gesehenen Fotografie ist die Gestaltung des Westbereichs nur fragmentarisch überliefert. Zum einen halfen die Pläne, zum anderen ergaben sich die entscheidenden Hinweise für die Rekonstruktion ausgerechnet durch ein Bild der zerstörten Synagoge. Schauen wir uns dieses an. Wir sehen im Westen die Ausbildung der Empore mit einer bemalten Brüstung. Daraus leitet sich die Rekonstruktion für die Westempore ab.
-
-Hier der Blick von der Westempore. Sehen wir uns nun den Innenraum von der seitlichen Empore aus an. Gut ist die Längsausrichtung des Gebäudes wahrzunehmen. In der Regel sind der Toraschrein und die gesamte Synagoge in ihrer Längsachse nach Jerusalem ausgerichtet. In Deutschland liegt so der Toraschrein fast immer im Osten des Gebäudes. Der Eingang dagegen liegt meistens gegenüber – auf der Westseite. So auch in Wolfenbüttel.
-
-Schauen wir uns nun den Bereich um den Toraschrein von der Frauenempore aus an. Während in orthodoxen Synagogen die Bima in der Mitte des Raums steht, befindet sie sich in Reformsynagogen wie hier vor dem Schrein. Zwei Stufen führen auf einen erhöhten Bereich, der in der Toraanische endet.
-Die Toraanische von unten. Über der Bima hängt das Ewige Licht.
-
-Der erhöhte Blick auf die Westempore gibt die Sicht auf die imposante Orgel frei. Von ihr gab es eine Zeichnung, die als Vorlage für den Nachbau im Computer diente. Neben der Orgel ist ein Chor, in dem auch Frauen singen, Kennzeichen von Reformsynagogen.
-
-Mit dieser zentralen Perspektive begeben wir uns – vorbei am Ewigen Licht – wieder in das Erdgeschoss. In der Vordergrund die Bima – hinten der Eingang im Westen.
-Betrachten wir jetzt noch einmal den Bereich, wo die Männer saßen, genauer. 200 Sitzplätze standen hier zur Verfügung. Der Blick geht abschließend zum Eingang.
-
-45 Jahre betraten jüdische Männer hier die Synagoge, dann zerstören Nationalsozialisten in der Nacht vom 9. auf den 10. November 1938 für immer das Gotteshaus. Die Einrichtung wird zerschlagen und das Gebäude mit Benzin angezündet. Es brannte bis auf die Umfassungsmauern aus.
-
-1933 zählte die jüdische Gemeinde 112 Mitglieder, 1939 nur noch rund 50. Sie wurden von den Nationalsozialisten in die Vernichtungslager deportiert und fast alle ermordet. Mit den letzten Deportationen am 16. März 1943 erlischt das jüdische Leben in Wolfenbüttel. Eine neue Gemeinde entsteht nicht mehr.
-
-Auf dem Grundstück der Synagoge steht heute ein Wohnhaus. Eine Gedenktafel erinnert an die ehemalige Synagoge. Auch an anderer Stelle wird mit der Eröffnung des Gedenk- und Begegnungsorts Samson Schule an Jüdisches Leben in Wolfenbüttel erinnert. Nach umfassendem Umbau bietet das ehemalige jüdische Schulhaus Platz für eine Dauerausstellung, Veranstaltungen und rund 150 Apartments für Studierende und Auszubildende. Das Gebäude knüpft so an eine jüdische Tradition im Sinne der Aufklärung, Bildung und Verständigung an.
-
-Schauen wir zum Schluss noch einmal in die Lessingstraße. So würde es aussehen, wenn die Synagoge noch stehen würde. An sie erinnert nun das Bürgermuseum mit der virtuellen Rekonstruktion. Es möchte mit den Medien des 21. Jahrhunderts gerade junge Menschen neugierig machen für die Beschäftigung mit der jüdischen Vergangenheit der Stadt.`,
-    code: 'EN',
-    ariaPlay: 'Play',
-    ariaPause: 'Pause'
-  },
-
-  en: {
-    title: 'Synagogue Wolfenbüttel — Audio Text',
-    subtitle: 'Wolfenbüttel around 1900.',
-    body: `Near the renowned Herzog August Library once stood the synagogue of the Jewish community in Lessingstraße. In November 1938, the National Socialists destroyed this impressive structure. Using architectural plans and historical photographs, a virtual reconstruction of the building has been created. The design was by the well-known Brunswick architect Konstantin Ude. Of particular note was the twin-tower façade, combining Oriental and Romanesque stylistic features. High above it rose the Tablets of the Law bearing the Ten Commandments — a characteristic element of Jewish houses of worship. Delicate architectural details linked towers and gables, giving the building a unique visual presence.
+    const content = {
+      title: 'Synagogue Wolfenbüttel — Audio Text',
+      subtitle: 'Wolfenbüttel around 1900',
+      body: `Near the renowned Herzog August Library once stood the synagogue of the Jewish community in Lessingstraße. In November 1938, the National Socialists destroyed this impressive structure. Using architectural plans and historical photographs, a virtual reconstruction of the building has been created. The design was by the well-known Brunswick architect Konstantin Ude. Of particular note was the twin-tower façade, combining Oriental and Romanesque stylistic features. High above it rose the Tablets of the Law bearing the Ten Commandments – a characteristic element of Jewish houses of worship. Delicate architectural details linked towers and gables, giving the building a unique visual presence.
 
 The new synagogue was solemnly inaugurated on 21 June 1893.
 
 From the richly ornamented brick entrance façade, we move to the southern side. The colour palette of the brickwork was inspired by the nearly contemporary Jewish Free School, known as the Samson School. The new synagogue had become necessary because the previous one in Harzstraße had become too small. As we continue along the southern wall toward the eastern end of the building, an apse becomes clearly visible. Inside was the Torah Ark, where the valuable Torah scrolls were kept.
 
-The shape of the apse could only be determined from photographs, which depict it as distinctly rounded. In contrast, the architect’s original drawings show a polygonal form. Differences between the design and the realised structure are also apparent in the windows. While the ground-floor windows in the drawings are rounded, the executed building features triangular forms. Consequently, the reconstruction had to rely more heavily on photographic evidence. The northern side, shown here, was often photographed because the undeveloped neighbouring site allowed an unobstructed view of the synagogue's long side.
+The shape of the apse could only be determined from photographs, which depict it as distinctly rounded. In contrast, the architect’s original drawings show a polygonal form. Differences between the design and the realised structure are also apparent in the windows. While the ground-floor windows in the drawings are rounded, the executed building features triangular forms. Consequently, the reconstruction had to rely more heavily on photographic evidence. The northern side, shown here, was often photographed because the undeveloped neighbouring site allowed an unobstructed view of the synagogue’s long side.
 
 The Wolfenbüttel Synagogue was a Reform synagogue. Practically, this meant a shortened liturgy, partly in German, regular sermons, and the introduction of organ music. The organ in the Wolfenbüttel synagogue was located directly behind the large window in the entrance façade. Men and women likely entered the building together through this portal. The women then ascended a staircase to a gallery, while the ground floor was reserved for the men.
 
-Before us stands the magnificent Torah Ark. Behind the red curtain were the precious Torah scrolls — handwritten parchment scrolls containing the Five Books of Moses, rolled onto two wooden staves. To this day, Torah scrolls are written by hand on parchment. The Ark was crowned by a semicircular dome. In front of it stood the Bimah, from which the Torah was read.
+Before us stands the magnificent Torah Ark. Behind the red curtain were the precious Torah scrolls – handwritten parchment scrolls containing the Five Books of Moses, rolled onto two wooden staves. To this day, Torah scrolls are written by hand on parchment. The Ark was crowned by a semicircular dome. In front of it stood the Bimah, from which the Torah was read.
 
-The view shown here was reconstructed from the only surviving image of the splendid interior. Along with architectural drawings — which do not depict the final execution — this photograph formed the basis for the reconstruction. The colour scheme is hypothetical and modeled on other synagogues of the period.
+The view shown here was reconstructed from the only surviving image of the splendid interior. Along with architectural drawings – which do not depict the final execution – this photograph formed the basis for the reconstruction. The colour scheme is hypothetical and modelled on other synagogues of the period.
 
 Looking upward, we see the gallery where the women sat. There were reportedly 84 seats available.
 
 Our view now shifts westward. Compared to the previously mentioned photograph, the western part of the interior is only fragmentarily documented. Architectural plans provide some insight, but crucial information was derived from a photograph of the destroyed synagogue. It shows the western gallery with its painted balustrade, which served as the basis for reconstructing this area.
 
-Here we see the view from the western gallery. Now let us examine the interior from the side gallery. The longitudinal orientation of the building becomes apparent. Typically, the Torah Ark — and thus the synagogue — is oriented toward Jerusalem. In Germany, this means the Ark is located on the eastern side, while the entrance lies on the western side. This was also the case in Wolfenbüttel.
+Here we see the view from the western gallery. Now let us examine the interior from the side gallery. The longitudinal orientation of the building becomes apparent. Typically, the Torah Ark – and thus the synagogue – is oriented toward Jerusalem. In Germany, this means the Ark is located on the eastern side, while the entrance lies on the western side. This was also the case in Wolfenbüttel.
 
-Next, we observe the area around the Torah Ark from the women’s gallery. In Orthodox synagogues, the Bimah stands in the middle of the room. In Reform synagogues — as here — it is positioned in front of the Ark. Two steps lead to a raised platform that ends in the Torah niche. Seen from below, the niche reveals the Eternal Light hanging above the Bimah.
+Next, we observe the area around the Torah Ark from the women’s gallery. In Orthodox synagogues, the Bimah stands in the middle of the room. In Reform synagogues – as here – it is positioned in front of the Ark. Two steps lead to a raised platform that ends in the Torah niche. Seen from below, the niche reveals the Eternal Light hanging above the Bimah.
 
-The elevated view toward the west gallery reveals the impressive organ. A historical drawing served as the model for the reconstructed instrument. Next to the organ is the choir, in which women also participated — another characteristic of Reform synagogues.
+The elevated view toward the west gallery reveals the impressive organ. A historical drawing served as the model for the reconstructed instrument. Next to the organ is the choir, in which women also participated – another characteristic of Reform synagogues.
 
-With this central perspective, we move — passing the Eternal Light — back to the ground floor. In the foreground is the Bimah; in the background, the western entrance.
+With this central perspective, we move – passing the Eternal Light – back to the ground floor. In the foreground is the Bimah; in the background, the western entrance.
 
 Let us now take a closer look at the area where the men sat. Approximately 200 seats were available here. Finally, our gaze returns to the entrance.
 
-For 45 years, Jewish men entered the synagogue through this portal — until the night of 9–10 November 1938, when the National Socialists destroyed the building. The interior was smashed, and the structure was set on fire with petrol. It burned down completely, leaving only the enclosing walls.
+For 45 years, Jewish men entered the synagogue through this portal – until the night of 9–10 November 1938, when the National Socialists destroyed the building. The interior was smashed, and the structure was set on fire with petrol. It burned down completely, leaving only the enclosing walls.
 
 In 1933, the Jewish community counted 112 members; by 1939, only about 50 remained. They were deported by the National Socialists to extermination camps, where nearly all of them were murdered. With the final deportations on 16 March 1943, Jewish life in Wolfenbüttel came to an end. A new community did not re-emerge.
 
 Today, a residential building stands on the site of the former synagogue. A memorial plaque commemorates it. Additionally, the Samson School Memorial and Educational Centre, recently inaugurated after extensive renovation, commemorates Jewish life in Wolfenbüttel. The former Jewish schoolhouse now houses a permanent exhibition, event spaces, and around 150 apartments for students and trainees. In this way, the building reconnects with Jewish traditions of enlightenment, education, and dialogue.
 
-Finally, we turn once more to Lessingstraße. This is how it would appear today if the synagogue still stood. The virtual reconstruction presented by the Bürger-Museum aims to inspire — especially among younger visitors — an interest in exploring the Jewish history of the city through the media of the 21st century.`,
-    code: 'DE',
-    ariaPlay: 'Play',
-    ariaPause: 'Pause'
-  }
-};
+Finally, we turn once more to Lessingstraße. This is how it would appear today if the synagogue still stood. The virtual reconstruction presented by the Bürger-Museum aims to inspire – especially among younger visitors – an interest in exploring the Jewish history of the city through the media of the 21st century.`
+    };
 
+    const titleEl    = document.getElementById('title');
+    const subtitleEl = document.getElementById('subtitle');
+    const bodyEl     = document.getElementById('body');
 
-  // Ключ для локального сохранения языка
-  const langKey = 'synagoge_lang';
-  let lang = localStorage.getItem(langKey) || 'de';
+    function setBodyText(text){
+      bodyEl.innerHTML = '';
+      text.split(/\n\s*\n|\n(?=\S)/).forEach(p=>{
+        const el = document.createElement('p');
+        const trimmed = p.trim();
+        if(trimmed.length){
+          el.textContent = trimmed;
+          bodyEl.appendChild(el);
+        }
+      });
+    }
 
-  const titleEl = document.getElementById('title');
-  const subtitleEl = document.getElementById('subtitle');
-  const bodyEl = document.getElementById('body');
-  const langBtn = document.getElementById('langBtn');
+    // Audio logic
+    const audio   = document.getElementById('audio');
+    const playBtn = document.getElementById('playBtn');
+    const seek    = document.getElementById('seek');
+    const cur     = document.getElementById('cur');
+    const dur     = document.getElementById('dur');
 
-  function setBodyText(text){
-    bodyEl.innerHTML = '';
-    text.split(/\n\s*\n|\n(?=\S)/).forEach(p=>{
-      const el = document.createElement('p');
-      el.textContent = p.trim();
-      bodyEl.appendChild(el);
+    function toTime(s){
+      s = Math.max(0, s|0);
+      const m = (s/60)|0;
+      const r = (s%60)|0;
+      return `${m}:${r.toString().padStart(2,'0')}`;
+    }
+
+    function loadAudio(){
+      audio.src = AUDIO_URL;
+      audio.load();
+      seek.value = 0;
+      seek.max = 100;
+      cur.textContent = '0:00';
+      dur.textContent = '0:00';
+      playBtn.textContent = '▶';
+      playBtn.setAttribute('aria-label', 'Play');
+    }
+
+    playBtn.addEventListener('click', ()=>{
+      if(audio.paused){
+        audio.play().catch(()=>{});
+      } else {
+        audio.pause();
+      }
     });
-  }
 
-  // Аудио-логика
-  const audio = document.getElementById('audio');
-  const playBtn = document.getElementById('playBtn');
-  const seek = document.getElementById('seek');
-  const cur = document.getElementById('cur');
-  const dur = document.getElementById('dur');
+    audio.addEventListener('play', ()=>{
+      playBtn.textContent = '❚❚';
+      playBtn.setAttribute('aria-label', 'Pause');
+    });
 
-  function toTime(s){
-    s = Math.max(0, s|0);
-    const m = (s/60)|0;
-    const r = (s%60)|0;
-    return `${m}:${r.toString().padStart(2,'0')}`;
-  }
+    audio.addEventListener('pause', ()=>{
+      playBtn.textContent = '▶';
+      playBtn.setAttribute('aria-label', 'Play');
+    });
 
-  function loadAudio(){
-    audio.src = getAudioUrl(lang);       // DE → .../DE/ZUNAGOGA.DE.mp3, EN → .../EN/ZUNAGOGA.EN.mp3
-    audio.load();
-    seek.value = 0;
-    seek.max = 100;
-    cur.textContent = '0:00';
-    dur.textContent = '0:00';
-    playBtn.textContent = '▶';
-    playBtn.setAttribute('aria-label', i18n[lang].ariaPlay);
-  }
+    audio.addEventListener('loadedmetadata', ()=>{
+      dur.textContent = toTime(audio.duration || 0);
+    });
 
-  playBtn.addEventListener('click', ()=>{
-    if(audio.paused){
-      audio.play().catch(()=>{});
-    } else {
-      audio.pause();
-    }
-  });
+    audio.addEventListener('timeupdate', ()=>{
+      if(audio.duration){
+        seek.max = Math.floor(audio.duration);
+        seek.value = Math.floor(audio.currentTime);
+        cur.textContent = toTime(audio.currentTime);
+      }
+    });
 
-  audio.addEventListener('play', ()=>{
-    playBtn.textContent = '❚❚';
-    playBtn.setAttribute('aria-label', i18n[lang].ariaPause);
-  });
+    seek.addEventListener('input', ()=>{
+      if(audio.duration){
+        audio.currentTime = +seek.value;
+      }
+    });
 
-  audio.addEventListener('pause', ()=>{
-    playBtn.textContent = '▶';
-    playBtn.setAttribute('aria-label', i18n[lang].ariaPlay);
-  });
-
-  audio.addEventListener('loadedmetadata', ()=>{
-    dur.textContent = toTime(audio.duration || 0);
-  });
-
-  audio.addEventListener('timeupdate', ()=>{
-    if(audio.duration){
-      seek.max = Math.floor(audio.duration);
-      seek.value = Math.floor(audio.currentTime);
-      cur.textContent = toTime(audio.currentTime);
-    }
-  });
-
-  seek.addEventListener('input', ()=>{
-    if(audio.duration){
-      audio.currentTime = +seek.value;
-    }
-  });
-
-  function applyLang(){
-    const t = i18n[lang];
-    document.documentElement.lang = (lang === 'de' ? 'de' : 'en');
-    titleEl.textContent = t.title;
-    subtitleEl.textContent = t.subtitle;
-    setBodyText(t.body);
-    langBtn.textContent = t.code;
+    // Initial setup
+    document.title      = content.title;
+    titleEl.textContent = content.title;
+    subtitleEl.textContent = content.subtitle;
+    setBodyText(content.body);
     loadAudio();
-  }
-
-  langBtn.addEventListener('click', ()=>{
-    lang = (lang === 'de') ? 'en' : 'de';
-    localStorage.setItem(langKey, lang);
-    applyLang();
-  });
-
-  // Первый запуск
-  applyLang();
-</script>
+  </script>
+</body>
+</html>
